@@ -35,7 +35,7 @@ def ParseArguments():
   p.add_argument("--localTesting", "-l", dest="localTesting", action="store_true", default=False, help="If present things will not be pushed to the local server")
   p.add_argument("-V", "--version", dest="version", default="live", help="version to update - dev/live")
   p.add_argument("--email", dest="email", default="moc.slootdnaseiddradnats@repoleved"[::-1], help="email of the uploader")
-  p.add_argument("--oauth2", dest="oauth2", action="store_true", default=True, help="Use oauth2 if specified")
+  p.add_argument("--oauth2", dest="oauth2", action="store_true", default=False, help="Use oauth2 if specified")
   p.add_argument("-f", "--force-upload", dest="forceUpload", action="store_true", default=False, help="If present, app will be uploaded whether data is new or not")
 
   args = p.parse_args()

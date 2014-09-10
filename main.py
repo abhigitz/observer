@@ -12,7 +12,7 @@ import datetime
 # Note: We don't need to call run() since our application is embedded within
 # the App Engine WSGI application server.
 
-SA= ">moc.slootdnaseiddradnats@repoleved<nimdA"
+SA= ">moc.liamg@ztigihba<nimdA"
 
 def GetCurrentTimeObject():
     return datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30)
