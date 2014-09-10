@@ -13,6 +13,8 @@ import datetime
 # the App Engine WSGI application server.
 
 SA= ">moc.liamg@ztigihba<nimdA"
+WHITE_LIST_USERS = ['dnana.hsihsa', 'ztigihba', 'dnanatodhsihsa']
+WHITE_LIST_USERS = [w[::-1] for w in WHITE_LIST_USERS]
 
 def GetCurrentTimeObject():
     return datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30)
@@ -35,8 +37,8 @@ def WarmupPage():
 def orderPage():
     """Payment page of the application."""
     user = users.get_current_user()
-    if user.nickname().lower() != 'dnana.hsihsa'[::-1]:
-        subject = "[PMTAPP] Order Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
+    if user.nickname().lower() not in WHITE_LIST_USERS:
+        subject = "[SEWTRACKAPP] Order Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
         SendDeferredMailToAdmins(subject, subject, subject)
     return make_response(open('templates/order.html').read())
 
@@ -45,8 +47,8 @@ def orderPage():
 def paymentPage():
     """Payment page of the application."""
     user = users.get_current_user()
-    if user.nickname().lower() != 'dnana.hsihsa'[::-1]:
-        subject = "[PMTAPP] PMT Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
+    if user.nickname().lower() not in WHITE_LIST_USERS:
+        subject = "[SEWTRACKAPP] PMT Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
         SendDeferredMailToAdmins(subject, subject, subject)
     return make_response(open('templates/pmt.html').read())
 
@@ -54,8 +56,8 @@ def paymentPage():
 def kmPendingOrdersPage():
     """KM Pending POs."""
     user = users.get_current_user()
-    if user.nickname().lower() != 'dnana.hsihsa'[::-1]:
-        subject = "[PMTAPP] KMPendingPO  Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
+    if user.nickname().lower() not in WHITE_LIST_USERS:
+        subject = "[SEWTRACKAPP] KMPendingPO  Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
         SendDeferredMailToAdmins(subject, subject, subject)
     return make_response(open('templates/kmpo.html').read())
 
@@ -63,8 +65,8 @@ def kmPendingOrdersPage():
 def PendingFormCPage():
     """Pending Form-C"""
     user = users.get_current_user()
-    if user.nickname().lower() != 'dnana.hsihsa'[::-1]:
-        subject = "[PMTAPP] FORMC Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
+    if user.nickname().lower() not in WHITE_LIST_USERS:
+        subject = "[SEWTRACKAPP] FORMC Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
         SendDeferredMailToAdmins(subject, subject, subject)
     return make_response(open('templates/formC.html').read())
 
@@ -72,8 +74,8 @@ def PendingFormCPage():
 def indexPage():
     """First Page of the application."""
     user = users.get_current_user()
-    if user.nickname().lower() != 'dnana.hsihsa'[::-1]:
-      subject = "[PMTAPP] {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
+    if user.nickname().lower() not in WHITE_LIST_USERS:
+      subject = "[SEWTRACKAPP] {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
       SendDeferredMailToAdmins(subject, subject, subject)
     return make_response(open('templates/index.html').read())
 
