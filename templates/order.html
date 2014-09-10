@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Due Orders</title>
+        <script src="/static/lib/angular/angular15.min.js"></script>
+        <script src="/static/js/controllers.js"></script>
+
+        <!-- Standard Favicon -->
+        <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+
+        <!-- For iPhone 4 Retina display: -->
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/img/apple-touch-icon-114x114-precomposed.png">
+
+        <!-- For iPad: -->
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/img/apple-touch-icon-72x72-precomposed.png">
+
+        <!-- For iPhone: -->
+        <link rel="apple-touch-icon-precomposed" href="/static/img/apple-touch-icon-57x57-precomposed.png">
+
+        <!-- For windows Phone: -->
+        <meta name="msapplication-TileImage" content="/static/img/favicon144x144.png">
+        <meta name="msapplication-TileColor" content="#c8bebd">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+        <link rel="stylesheet" href="/static/css/style.css" type="text/css" />
+    </head>
+    <body ng-app="ngOutstandingApp" ng-controller="ngOrderController">
+        <!-- Have a jinja style header  here -->
+        <div id = "StickyHeader">
+            <span class="pageTitle"><H3>Orders</H3></span>
+            <div id = "statusnote" ng-bind="statusNote"></div>
+        </div>
+        <hr>
+        <div id="MiddleBody">
+            <div ng-repeat="dateWiseObj in data">
+                <div class="horizontalDarkBlueBackground">
+                    <span class="date">{{dateWiseObj.date}}</span>
+                </div>
+                <div ng-repeat="singleOrder in dateWiseObj.orders">
+                    <div class="tm30"></div>
+                    <div class="horizontalLightBlueBackground">
+                        <span class="customerName">{{singleOrder.custName}}</span>
+                    </div>
+                    <div>
+                        <span class="materialDesc">{{singleOrder.md}}</span>
+                        <span >PO# {{singleOrder.oNum}} dt {{dateWiseObj.date}}</span>
+                    </div>
+                </div>
+                <div class="tm50"></div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Due Payments</title>
+    <script src="/static/lib/angular/angular15.min.js"></script>
+    <script src="/static/js/controllers.js"></script>
+
+    <!-- Standard Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+
+    <!-- For iPhone 4 Retina display: -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/img/apple-touch-icon-114x114-precomposed.png">
+
+    <!-- For iPad: -->
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/img/apple-touch-icon-72x72-precomposed.png">
+
+    <!-- For iPhone: -->
+    <link rel="apple-touch-icon-precomposed" href="/static/img/apple-touch-icon-57x57-precomposed.png">
+
+    <!-- For windows Phone: -->
+    <meta name="msapplication-TileImage" content="/static/img/favicon144x144.png">
+    <meta name="msapplication-TileColor" content="#c8bebd">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css" type="text/css" >
+    <link rel="stylesheet" href="static/css/bs_modified.css" type="text/css" >
+  </head>
+  <body ng-app="ngOutstandingApp" ng-controller="ngPmtController">
+    <h1 class="text-center">Payments</h1>
+    <div class="well">
+      <span>Total Outstanding: </span><span id="totalOutstanding" ng-bind="totalOutstanding"></span>
+      <div ng-repeat="x in comps.showVerbatimOnTop">
+        <span>{{x}}</span>
+      </div>
+      <span ng-bind="statusNote"></span>
+    </div>
+    <form class="form-vertical" role="form">
+      <div class="col-sm-12">
+        <input class="form-control searchGlass" ng-model="searchText" type="search" placeholder="Search ..." autofocus/>
+      </div>
+    </form>
+    <div class="container-fluid">
+      <div ng-repeat="comp in comps.customers | filter: searchText">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <div class="row">
+              <span class="customerName col-sm-8">{{comp.name}}</span>
+              <span class="customerTotal col-sm-4">Rs.{{subtotal(comp)}}</span>
+            </div>
+          </div>
+          <div class="panel-content">
+            <table class="table talbe-striped">
+              <tr ng-repeat="bill in comp.bills">
+                <td>{{ bill.bn }}</td>
+                <td>{{ bill.bd }}</td>
+                <td ng-class="{red:bill.cd>45}">{{bill.cd}} days</td>
+                <td>Rs.{{ bill.ba }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
