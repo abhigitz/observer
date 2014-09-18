@@ -13,8 +13,15 @@ import datetime
 # the App Engine WSGI application server.
 
 SA= ">moc.liamg@ztigihba<nimdA"
-WHITE_LIST_USERS = ['dnana.hsihsa', 'ztigihba', 'dnanatodhsihsa']
-WHITE_LIST_USERS = [w[::-1] for w in WHITE_LIST_USERS]
+WHITE_LIST_USERS = set(w[::-1] for w in ['dnana.hsihsa', 'ztigihba', 'dnanatodhsihsa'])
+
+def AuthorizeAndInform(user, pageName):
+  if user.nickname().lower() not in WHITE_LIST_USERS:
+    subject = "[SEWTRACKAPP] {} Page {} used the app at {}".format(pageName, user.nickname(), GetCurrentTimeAsString())
+    SendDeferredMailToAdmins(subject, subject, subject)
+  #TODO: restrict to authorized entries only
+  return
+
 
 def GetCurrentTimeObject():
     return datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30)
@@ -36,56 +43,32 @@ def WarmupPage():
 @app.route('/order')
 def orderPage():
     """Payment page of the application."""
-    user = users.get_current_user()
-    if user.nickname().lower() not in WHITE_LIST_USERS:
-        subject = "[SEWTRACKAPP] Order Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
-        SendDeferredMailToAdmins(subject, subject, subject)
+    AuthorizeAndInform(users.get_current_user(), "Order")
     return make_response(open('templates/order.html').read())
 
 
 @app.route('/pmt')
 def paymentPage():
     """Payment page of the application."""
-    user = users.get_current_user()
-    if user.nickname().lower() not in WHITE_LIST_USERS:
-        subject = "[SEWTRACKAPP] PMT Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
-        SendDeferredMailToAdmins(subject, subject, subject)
+    AuthorizeAndInform(users.get_current_user(), "PMT")
     return make_response(open('templates/pmt.html').read())
-
-@app.route('/kmpo')
-def kmPendingOrdersPage():
-    """KM Pending POs."""
-    user = users.get_current_user()
-    if user.nickname().lower() not in WHITE_LIST_USERS:
-        subject = "[SEWTRACKAPP] KMPendingPO  Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
-        SendDeferredMailToAdmins(subject, subject, subject)
-    return make_response(open('templates/kmpo.html').read())
 
 @app.route('/formC')
 def PendingFormCPage():
     """Pending Form-C"""
-    user = users.get_current_user()
-    if user.nickname().lower() not in WHITE_LIST_USERS:
-        subject = "[SEWTRACKAPP] FORMC Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
-        SendDeferredMailToAdmins(subject, subject, subject)
+    AuthorizeAndInform(users.get_current_user(), "FORMC")
     return make_response(open('templates/formC.html').read())
 
 @app.route('/rawmat')
 def RawMaterialAsOfNowPage():
     """Raw material as of now"""
-    user = users.get_current_user()
-    if user.nickname().lower() not in WHITE_LIST_USERS:
-        subject = "[SEWTRACKAPP] Raw Material Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
-        SendDeferredMailToAdmins(subject, subject, subject)
+    AuthorizeAndInform(users.get_current_user(), "RawMaterial")
     return make_response(open('templates/rawmat.html').read())
 
 @app.route('/')
 def indexPage():
     """First Page of the application."""
-    user = users.get_current_user()
-    if user.nickname().lower() not in WHITE_LIST_USERS:
-      subject = "[SEWTRACKAPP] {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
-      SendDeferredMailToAdmins(subject, subject, subject)
+    AuthorizeAndInform(users.get_current_user(), "Main")
     return make_response(open('templates/index.html').read())
 
 @app.route('/api/get-pending-orders-data', methods=['POST'])
