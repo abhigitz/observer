@@ -1,4 +1,4 @@
-from Util.UtilGAE import FixSysPath
+from util_gae import FixSysPath
 FixSysPath()
 
 import unittest

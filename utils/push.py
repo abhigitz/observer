@@ -6,7 +6,7 @@
 
 from Util.Misc import PrintInBox, cd, YYYY_MM_DD
 from Util.Persistent import Persistent
-from Util.UtilGAE import FixSysPath, gae_sdk_path
+from util_gae import FixSysPath, gae_sdk_path
 
 import argparse
 import json
@@ -26,7 +26,7 @@ FORMC_PREFIX = "FORMC"
 DB_LOOKUP_PATH  = os.path.abspath(os.path.join(UBEROBSERVERDIR, "static", "dbs"))
 
 APPS=[
-    os.path.abspath(os.path.join(UBEROBSERVERDIR, "..", "GZBDocs")),
+    os.path.join(os.path.dirname(UBEROBSERVERDIR), "GZBDocs"),
     #Well somebody has to know all the paths. The apps are independent but this app by very nature needs to know what all apps need to be merged.
     ]
 
@@ -182,17 +182,18 @@ class PersistentLastModifiedTimeOfBillsForJsonDataCheck(Persistent):
 
 def _InvokeJsonGenerationApp(app):
   #Assumption: All apps have similar structure. If structure changes, the following logic will change too.
-  pythonApp = os.path.join(app, "code", "whopaid", "JsonDataGenerator.py")
+  pythonApp = os.path.join(app, "code", "whopaid", "json_data_generator.py")
   dbGenerateCmd = "python \"{a}\" --generate-json".format(a=pythonApp)
   with cd(os.path.dirname(pythonApp)):
-    PrintInBox("Running: {}".format(pythonApp))
-    subprocess.check_call(dbGenerateCmd)
+    PrintInBox("Running: {}".format(dbGenerateCmd))
+    subprocess.check_call(dbGenerateCmd, shell = True)
+  
   return
 
 def GenerateMergedJsonsForApps():
   anythingChanged = False
   for app in APPS:
-    billsDir = os.path.join(app, "entries") #Hack: We are storing parent directory path because name of bills file is different in different apps but "Bills" name of dir is constant.
+    billsDir = os.path.abspath(os.path.join(app, "entries")) #Hack: We are storing parent directory path because name of bills file is different in different apps but "Bills" name of dir is constant.
     p = PersistentLastModifiedTimeOfBillsForJsonDataCheck()
     if billsDir in p:
       if p[billsDir] == os.stat(billsDir).st_mtime:
@@ -214,7 +215,7 @@ def ExecuteUnitTests():
   if not os.path.exists(unitTestsPath):
     raise Exception("Path does not exist: {}".format(unitTestsPath))
 
-  subprocess.check_call("python {}".format(unitTestsPath)) #Run unit tests
+  subprocess.check_call("python {}".format(unitTestsPath), shell=True) #Run unit tests
   return
 
 def main():
@@ -246,7 +247,7 @@ def UploadAppOnGoogleAppEngine(args):
     raise Exception("Path does not exist: {}".format(appcfgPath))
   oauth2 = "--oauth2 --noauth_local_webserver" if args.oauth2 else ""
   updateCmd = "python \"{a}\" --version={v} --email={e} {oauth} update {w}".format(a=appcfgPath, v=args.version, e=args.email,w=UBEROBSERVERDIR, oauth=oauth2)
-  subprocess.check_call(updateCmd)
+  subprocess.check_call(updateCmd, shell=True)
   #SaveNewHash() #TODO: Better naming for these methods
   return
 
