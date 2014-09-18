@@ -94,3 +94,19 @@ appMod.controller('ngFormCController', ['$scope', '$http', function($scope, $htt
 
 }]);
 
+appMod.controller('ngRawMaterialController', ['$scope', '$http', function($scope, $http) {
+  var api = '/api/get-rawmaterial-data';
+  var postData = null;
+
+  $http.post(api, postData).success(function(data, status, headers, config) {
+    $scope.allParts = data["parts"];
+    $scope.showVerbatimOnTop = data["showVerbatimOnTop"];
+    $scope.statusNote = "";
+  }).error(function(data, status, headers, config){
+    $scope.statusNote = "There was an error. Thats all there is to it. Please try again after some time";
+  });
+
+  $scope.statusNote = "Fetching data...";
+
+}]);
+

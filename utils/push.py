@@ -22,6 +22,7 @@ PMT_PREFIX = "PMT"
 ORDER_PREFIX = "ORDER"
 KMO_PREFIX = "KMO"
 FORMC_PREFIX = "FORMC"
+RAW_MAT_PREFIX = "RAWMAT"
 
 DB_LOOKUP_PATH  = os.path.abspath(os.path.join(UBEROBSERVERDIR, "static", "dbs"))
 
@@ -49,6 +50,7 @@ def DuePmtWithInterest(customer):
   return sum([float(b["ba"]) * ONE_DAY_EFFECTIVE_INTEREST for b in customer["bills"]])
 
 def MergeAllJsons():
+  MergeRawMaterialJsons()
   MergePendingFormCJsons()
   MergeKMOrdersJsons()
   MergePaymentJsons()
@@ -146,6 +148,33 @@ def MergePendingFormCJsons():
       }
 
   with open(finalJsonPath, "w") as f:
+    json.dump(finalJsonData, f, separators=(',', ':'), indent=0)
+  return
+
+def MergeRawMaterialJsons():
+  from names import HOSTED_RAW_MATERIAL_JSON_NAME
+  finalJsonPath = os.path.join(DB_LOOKUP_PATH, HOSTED_RAW_MATERIAL_JSON_NAME)
+  if os.path.exists(finalJsonPath):
+    os.remove(finalJsonPath)
+
+  finalRawMaterial = list()
+  finalShowVerbatimOnTopData = list()
+
+  for fp in os.listdir(DB_LOOKUP_PATH):
+    if fp.startswith(RAW_MAT_PREFIX) and os.path.splitext(fp)[1] == ".json":
+      jsonFilePath = os.path.join(DB_LOOKUP_PATH, fp)
+      with open(jsonFilePath, "r") as f:
+        jsonData = json.load(f)
+        finalRawMaterial += jsonData["parts"]
+        finalShowVerbatimOnTopData.append(jsonData["showVerbatimOnTop"])
+  finalRawMaterial = sorted(finalRawMaterial, key=lambda x: x["diff"], reverse=False)
+
+  finalJsonData = {
+      "parts": finalRawMaterial,
+      "showVerbatimOnTop": finalShowVerbatimOnTopData,
+      }
+
+  with open(finalJsonPath, "w") as f:
     json.dump(finalJsonData, f, separators=(',',':'), indent=0)
   return
 
@@ -172,7 +201,7 @@ def MergePaymentJsons():
       }
 
   with open(finalJsonPath, "w") as f:
-    json.dump(finalJsonData, f, separators=(',',':'), indent=2)
+    json.dump(finalJsonData, f, separators=(',',':'), indent=0)
   return
 
 class PersistentLastModifiedTimeOfBillsForJsonDataCheck(Persistent):
@@ -186,8 +215,8 @@ def _InvokeJsonGenerationApp(app):
   dbGenerateCmd = "python \"{a}\" --generate-json".format(a=pythonApp)
   with cd(os.path.dirname(pythonApp)):
     PrintInBox("Running: {}".format(dbGenerateCmd))
-    subprocess.check_call(dbGenerateCmd, shell = True)
-  
+    subprocess.check_call(dbGenerateCmd, shell=True)
+
   return
 
 def GenerateMergedJsonsForApps():

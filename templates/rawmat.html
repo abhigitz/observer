@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Raw material in premises</title>
+    <script src="/static/lib/angular/angular15.min.js"></script>
+    <script src="/static/js/controllers.js"></script>
+
+    <!-- Standard Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+
+    <!-- For iPhone 4 Retina display: -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/img/apple-touch-icon-114x114-precomposed.png">
+
+    <!-- For iPad: -->
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/img/apple-touch-icon-72x72-precomposed.png">
+
+    <!-- For iPhone: -->
+    <link rel="apple-touch-icon-precomposed" href="/static/img/apple-touch-icon-57x57-precomposed.png">
+
+    <!-- For windows Phone: -->
+    <meta name="msapplication-TileImage" content="/static/img/favicon144x144.png">
+    <meta name="msapplication-TileColor" content="#c8bebd">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css" type="text/css" >
+    <link rel="stylesheet" href="static/css/bs_modified.css" type="text/css" >
+  </head>
+  <body ng-app="ngOutstandingApp" ng-controller="ngRawMaterialController">
+    <h1 class="text-center">Raw Material In Premises</h1>
+    <div class="well">
+      <div ng-repeat="x in showVerbatimOnTop">
+        <span>{{x}}</span>
+      </div>
+      <span ng-bind="statusNote"></span>
+    </div>
+    <form class="form-horizontal" role="form">
+      <div class="col-sm-12">
+        <input class="form-control searchGlass" ng-model="searchText" type="search" placeholder="Search ..." autofocus/>
+      </div>
+    </form>
+    <div class="container-fluid">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Raw materials sorted by deficit from declared threshold</div>
+        <table class="table table-striped">
+          <tr>
+            <th>Name</th>
+            <th>Quantity in premises</th>
+            <th>Ref</th>
+            <th>Diff</th>
+          </tr>
+          <tr ng-repeat="part in allParts | filter : searchText">
+            <td>{{ part.name }}</td>
+            <td>{{ part.nowQty }}</td>
+            <td>{{ part.refLevel }}</td>
+            <td ng-class="{red:part.diff<0}">{{part.diff}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

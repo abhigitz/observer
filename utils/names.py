@@ -1,0 +1,1 @@
+﻿HOSTED_RAW_MATERIAL_JSON_NAME = "rawmat.json"

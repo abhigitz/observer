@@ -70,6 +70,15 @@ def PendingFormCPage():
         SendDeferredMailToAdmins(subject, subject, subject)
     return make_response(open('templates/formC.html').read())
 
+@app.route('/rawmat')
+def RawMaterialAsOfNowPage():
+    """Raw material as of now"""
+    user = users.get_current_user()
+    if user.nickname().lower() not in WHITE_LIST_USERS:
+        subject = "[SEWTRACKAPP] Raw Material Page {} used the app at {}".format(user.nickname(), GetCurrentTimeAsString())
+        SendDeferredMailToAdmins(subject, subject, subject)
+    return make_response(open('templates/rawmat.html').read())
+
 @app.route('/')
 def indexPage():
     """First Page of the application."""
@@ -94,6 +103,10 @@ def api_get_kmpo_data():
 @app.route('/api/get-formC-data', methods=['POST'])
 def api_get_formc_data():
     return make_response(open('static/dbs/formC.json').read())
+
+@app.route('/api/get-rawmaterial-data', methods=['POST'])
+def api_get_rawmat_data():
+    return make_response(open('static/dbs/rawmat.json').read())
 
 
 @app.errorhandler(404)
