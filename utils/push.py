@@ -23,6 +23,7 @@ ORDER_PREFIX = "ORDER"
 KMO_PREFIX = "KMO"
 FORMC_PREFIX = "FORMC"
 RAW_MAT_PREFIX = "RAWMAT"
+FINISHED_GOODS_PREFIX = "FINSTOCK"
 
 DB_LOOKUP_PATH  = os.path.abspath(os.path.join(UBEROBSERVERDIR, "static", "dbs"))
 
@@ -50,6 +51,7 @@ def DuePmtWithInterest(customer):
   return sum([float(b["ba"]) * ONE_DAY_EFFECTIVE_INTEREST for b in customer["bills"]])
 
 def MergeAllJsons():
+  MergeFinishedGoodsJsons()
   MergeRawMaterialJsons()
   MergePendingFormCJsons()
   MergeKMOrdersJsons()
@@ -150,6 +152,34 @@ def MergePendingFormCJsons():
   with open(finalJsonPath, "w") as f:
     json.dump(finalJsonData, f, separators=(',', ':'), indent=0)
   return
+
+def MergeFinishedGoodsJsons():
+  from names import HOSTED_FINSIHED_GOODS_JSON_NAME
+  finalJsonPath = os.path.join(DB_LOOKUP_PATH, HOSTED_FINSIHED_GOODS_JSON_NAME)
+  if os.path.exists(finalJsonPath):
+    os.remove(finalJsonPath)
+
+  finalFinishedGoods = list()
+  finalShowVerbatimOnTopData = list()
+
+  for fp in os.listdir(DB_LOOKUP_PATH):
+    if fp.startswith(FINISHED_GOODS_PREFIX) and os.path.splitext(fp)[1] == ".json":
+      jsonFilePath = os.path.join(DB_LOOKUP_PATH, fp)
+      with open(jsonFilePath, "r") as f:
+        jsonData = json.load(f)
+        finalFinishedGoods += jsonData["models"]
+        finalShowVerbatimOnTopData.extend(jsonData["showVerbatimOnTop"])
+  finalFinishedGoods = sorted(finalFinishedGoods, key=lambda x: x["nowQty"], reverse=True)
+
+  finalJsonData = {
+      "models": finalFinishedGoods,
+      "showVerbatimOnTop": finalShowVerbatimOnTopData,
+      }
+
+  with open(finalJsonPath, "w") as f:
+    json.dump(finalJsonData, f, separators=(',',':'), indent=0)
+  return
+
 
 def MergeRawMaterialJsons():
   from names import HOSTED_RAW_MATERIAL_JSON_NAME

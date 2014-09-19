@@ -1,1 +1,2 @@
 ﻿HOSTED_RAW_MATERIAL_JSON_NAME = "rawmat.json"
+HOSTED_FINSIHED_GOODS_JSON_NAME = "fingoods.json"

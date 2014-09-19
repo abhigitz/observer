@@ -1,7 +1,7 @@
 ﻿var appMod = angular.module('ngOutstandingApp', []);
 
 appMod.controller('ngOrderController', ['$scope', '$http', function($scope, $http) {
-    var api = "/api/get-pending-orders-data";
+    var api = "/api/get_pending_orders_data";
     var postData = null;
 
     $http.post(api, postData).success(function(data, status, headers, config) {
@@ -18,7 +18,7 @@ appMod.controller('ngOrderController', ['$scope', '$http', function($scope, $htt
 }]);
 
 appMod.controller('ngPmtController', ['$scope', '$http', function($scope, $http) {
-    var api = "/api/get-outstanding-pmt-data";
+    var api = "/api/get_outstanding_pmt_data";
     var postData = null;
 
     $scope.CalculateTotalOutstanding = function() {
@@ -53,33 +53,8 @@ appMod.controller('ngPmtController', ['$scope', '$http', function($scope, $http)
 
 }]);
 
-appMod.controller('ngKMPOController', ['$scope', '$http', function($scope, $http) {
-  var api = "/api/get-km-pending-po-data";
-  var postData = null;
-
-  $http.post(api, postData).success(function(data, status, headers, config) {
-    $scope.kmpo = data["kmOrders"];
-    $scope.showVerbatimOnTop = data["showVerbatimOnTop"];
-    $scope.showVerbatimOnTopDateISO = data["showVerbatimOnTopDateISO"];
-    $scope.statusNote = "";
-  }).error(function(data, status, headers, config){
-    $scope.statusNote = "There was an error. Thats all there is to it. Please try again after some time";
-  });
-
-  $scope.statusNote = "Fetching data...";
-
-  $scope.timeDiffInDaysFromNow = function(isoDateAsString) {
-    var millisecondsPerDay = 1000 * 60 * 60 * 24;
-    var millisBetween = new Date() - new Date(isoDateAsString);
-    var days = millisBetween / millisecondsPerDay;
-    return Math.floor(days);
-  };
-
-
-}]);
-
 appMod.controller('ngFormCController', ['$scope', '$http', function($scope, $http) {
-  var api = '/api/get-formC-data';
+  var api = '/api/get_formC_data';
   var postData = null;
 
   $http.post(api, postData).success(function(data, status, headers, config) {
@@ -95,11 +70,27 @@ appMod.controller('ngFormCController', ['$scope', '$http', function($scope, $htt
 }]);
 
 appMod.controller('ngRawMaterialController', ['$scope', '$http', function($scope, $http) {
-  var api = '/api/get-rawmaterial-data';
+  var api = '/api/get_rawmaterial_data';
   var postData = null;
 
   $http.post(api, postData).success(function(data, status, headers, config) {
     $scope.allParts = data["parts"];
+    $scope.showVerbatimOnTop = data["showVerbatimOnTop"];
+    $scope.statusNote = "";
+  }).error(function(data, status, headers, config){
+    $scope.statusNote = "There was an error. Thats all there is to it. Please try again after some time";
+  });
+
+  $scope.statusNote = "Fetching data...";
+
+}]);
+
+appMod.controller('ngFinishedGoodsController', ['$scope', '$http', function($scope, $http) {
+  var api = '/api/get_finished_goods_data';
+  var postData = null;
+
+  $http.post(api, postData).success(function(data, status, headers, config) {
+    $scope.allModels = data["models"];
     $scope.showVerbatimOnTop = data["showVerbatimOnTop"];
     $scope.statusNote = "";
   }).error(function(data, status, headers, config){
