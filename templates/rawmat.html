@@ -39,20 +39,20 @@
       </div>
     </form>
     <div class="container-fluid">
-      <div class="panel panel-primary">
+      <div class="panel panel-success">
         <div class="panel-heading">Raw materials sorted by deficit from their declared thresholds</div>
         <table class="table table-striped">
           <tr>
             <th>Name</th>
-            <th>Quantity in premises</th>
-            <th>Ref</th>
-            <th>Diff</th>
+            <th>Reference</th>
+            <th>Deficit</th>
+            <th>Quantity</th>
           </tr>
           <tr ng-repeat="part in allParts | filter : searchText">
             <td>{{ part.name }}</td>
-            <td>{{ part.nowQty }}</td>
             <td>{{ part.refLevel }}</td>
             <td ng-class="{red:part.diff<0}">{{part.diff}}</td>
+            <td>{{ part.nowQty }}</td>
           </tr>
         </table>
       </div>
