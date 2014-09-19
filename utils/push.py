@@ -166,7 +166,7 @@ def MergeRawMaterialJsons():
       with open(jsonFilePath, "r") as f:
         jsonData = json.load(f)
         finalRawMaterial += jsonData["parts"]
-        finalShowVerbatimOnTopData.append(jsonData["showVerbatimOnTop"])
+        finalShowVerbatimOnTopData.extend(jsonData["showVerbatimOnTop"])
   finalRawMaterial = sorted(finalRawMaterial, key=lambda x: x["diff"], reverse=False)
 
   finalJsonData = {
